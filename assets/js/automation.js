@@ -90,7 +90,7 @@ const AutomationEngine = {
 
     const user = db.getUser();
     const emotionData = EMOTION_MAP[emotion];
-    const severity = this.consecutiveNegative >= 5 ? 'urgent' : 'normal';
+    const severity = this.consecutiveNegative >= 5 ? 'high' : 'medium';
 
     // Create alert record
     const alert = db.addAlert({
@@ -100,7 +100,7 @@ const AutomationEngine = {
       consecutiveCount: this.consecutiveNegative,
       patientName: user.name,
       title: 'Emotional Distress Detected',
-      message: severity === 'urgent'
+      message: severity === 'high'
         ? `URGENT: ${user.name} has been showing sustained ${emotionData.label.toLowerCase()} (${this.consecutiveNegative}+ readings).`
         : `${user.name} appears to be feeling ${emotionData.label.toLowerCase()} (${this.consecutiveNegative} consecutive readings).`
     });
@@ -118,10 +118,10 @@ const AutomationEngine = {
     // Show in-app notification
     if (typeof showToast === 'function') {
       showToast(
-        severity === 'urgent' 
+        severity === 'high' 
           ? '🚨 Urgent alert sent to your caregiver' 
           : '📨 Your caregiver has been notified',
-        severity === 'urgent' ? 'danger' : 'warning'
+        severity === 'high' ? 'danger' : 'warning'
       );
     }
 

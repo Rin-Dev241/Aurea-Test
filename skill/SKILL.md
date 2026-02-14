@@ -40,3 +40,9 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 **IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well.
 
 Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
+
+## Project-specific guidance
+
+- Prioritize senior-friendly readability: larger base typography, clear contrast, generous spacing.
+- Make reminders feel urgent but gentle: visible popups plus device notifications when available.
+- Onboarding walkthroughs must always provide a clear skip option.

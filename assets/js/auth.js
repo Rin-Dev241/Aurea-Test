@@ -118,7 +118,12 @@ function handleDemoLogin() {
   // Add demo caregiver
   const caregivers = db.getCaregivers();
   if (caregivers.length === 0) {
-    db.addCaregiver({ name: 'Dr. Santos', email: 'caregiver@example.com', phone: '09123456789', relationship: 'Primary Caregiver' });
+    db.addCaregiver({
+      name: 'Dr. Santos',
+      email: 'caregiver@example.com',
+      phone: '09123456789',
+      relation: 'doctor'
+    });
   }
 
   window.location.href = 'pages/dashboard.html';

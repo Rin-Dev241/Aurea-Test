@@ -57,6 +57,142 @@ function showToast(message, type = 'info', duration = 5000) {
   setTimeout(() => toast.remove(), duration);
 }
 
+// ---- Reminder Alert Helpers ----
+const REMINDER_FIRE_KEY = 'aurea_reminder_last_fired';
+const REMINDER_SNOOZE_KEY = 'aurea_reminder_snooze';
+let activeReminderAlert = null;
+
+function getReminderStorage(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function setReminderStorage(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getReminderTimeKey(reminder, date = new Date()) {
+  const day = date.toISOString().split('T')[0];
+  return `${day}|${reminder.time || ''}`;
+}
+
+function isReminderForToday(reminder, date = new Date()) {
+  if (!reminder.repeat || reminder.repeat === 'none') return true;
+  const day = date.getDay();
+  if (reminder.repeat === 'daily') return true;
+  if (reminder.repeat === 'weekdays') return day >= 1 && day <= 5;
+  if (reminder.repeat === 'weekly') return true;
+  return true;
+}
+
+function isReminderFired(id, timeKey) {
+  const map = getReminderStorage(REMINDER_FIRE_KEY);
+  return map[id] === timeKey;
+}
+
+function markReminderFired(id, timeKey) {
+  const map = getReminderStorage(REMINDER_FIRE_KEY);
+  map[id] = timeKey;
+  setReminderStorage(REMINDER_FIRE_KEY, map);
+}
+
+function getSnoozeUntil(id) {
+  const map = getReminderStorage(REMINDER_SNOOZE_KEY);
+  return map[id] || 0;
+}
+
+function setSnoozeUntil(id, until) {
+  const map = getReminderStorage(REMINDER_SNOOZE_KEY);
+  map[id] = until;
+  setReminderStorage(REMINDER_SNOOZE_KEY, map);
+}
+
+function clearSnooze(id) {
+  const map = getReminderStorage(REMINDER_SNOOZE_KEY);
+  delete map[id];
+  setReminderStorage(REMINDER_SNOOZE_KEY, map);
+}
+
+function playReminderSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.type = 'sine';
+    oscillator.frequency.value = 880;
+    gain.gain.value = 0.12;
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+    setTimeout(() => {
+      oscillator.stop();
+      ctx.close();
+    }, 600);
+  } catch {
+    // Audio may be blocked without user interaction; fail silently.
+  }
+}
+
+function ensureReminderDialog() {
+  if (document.getElementById('reminderDialog')) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'dialog-overlay';
+  overlay.id = 'reminderDialog';
+  overlay.innerHTML = `
+    <div class="dialog">
+      <div class="dialog-icon">⏰</div>
+      <h3 id="reminderDialogTitle">Reminder</h3>
+      <p id="reminderDialogText">It's time for your routine.</p>
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" id="reminderDismissBtn">Got it</button>
+        <button class="btn btn-primary" id="reminderSnoozeBtn">Snooze 5 min</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  document.getElementById('reminderDismissBtn').addEventListener('click', () => {
+    closeReminderAlert();
+  });
+
+  document.getElementById('reminderSnoozeBtn').addEventListener('click', () => {
+    if (!activeReminderAlert) return;
+    const until = Date.now() + 5 * 60 * 1000;
+    setSnoozeUntil(activeReminderAlert.id, until);
+    closeReminderAlert();
+    showToast('Snoozed for 5 minutes', 'info');
+  });
+}
+
+function showReminderAlert(reminder, message) {
+  ensureReminderDialog();
+  activeReminderAlert = reminder;
+
+  const dialog = document.getElementById('reminderDialog');
+  const title = document.getElementById('reminderDialogTitle');
+  const text = document.getElementById('reminderDialogText');
+
+  if (title) title.textContent = reminder.title || 'Reminder';
+  if (text) text.textContent = message || "It's time for your routine.";
+  if (dialog) dialog.classList.add('active');
+}
+
+function closeReminderAlert() {
+  const dialog = document.getElementById('reminderDialog');
+  if (dialog) dialog.classList.remove('active');
+  activeReminderAlert = null;
+}
+
 // ---- Dashboard Initialization ----
 function initDashboard() {
   // Hide loading screen
@@ -340,17 +476,34 @@ function checkReminders() {
   const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
   reminders.forEach(r => {
-    if (r.enabled && r.time === currentTime && !r.completed) {
-      showToast(`⏰ ${r.title}`, 'warning');
-      
-      // Browser notification
-      if (Notification.permission === 'granted') {
-        new Notification('Aurea Reminder', {
-          body: r.title,
-          icon: '/assets/icons/aurea.png'
-        });
-      }
+    if (!r.enabled || r.completed) return;
+    if (!isReminderForToday(r, now)) return;
+
+    const snoozeUntil = getSnoozeUntil(r.id);
+    const dueBySnooze = snoozeUntil && now.getTime() >= snoozeUntil;
+    const dueByTime = r.time === currentTime;
+
+    if (!dueByTime && !dueBySnooze) return;
+
+    const timeKey = dueBySnooze ? `snooze|${snoozeUntil}` : getReminderTimeKey(r, now);
+    if (isReminderFired(r.id, timeKey)) return;
+
+    if (dueBySnooze) clearSnooze(r.id);
+
+    const message = r.time ? `${r.title} at ${formatTime(r.time)}` : r.title;
+    showToast(`⏰ ${message}`, 'warning');
+    showReminderAlert(r, message);
+    playReminderSound();
+    markReminderFired(r.id, timeKey);
+
+    // Browser notification
+    if (Notification.permission === 'granted') {
+      new Notification('Aurea Reminder', {
+        body: message,
+        icon: '/assets/icons/aurea.png'
+      });
     }
+  });
   });
 }
 

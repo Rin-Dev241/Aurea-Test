@@ -82,13 +82,13 @@
   /* Typography */
   --font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-display: 'Lora', Georgia, 'Times New Roman', serif;
-  --font-size-xs: 0.7rem;      /* 14px */
-  --font-size-sm: 0.8rem;      /* 16px */
-  --font-size-base: 1rem;      /* 20px */
-  --font-size-lg: 1.1rem;      /* 22px */
-  --font-size-xl: 1.3rem;      /* 26px */
-  --font-size-2xl: 1.5rem;     /* 30px */
-  --font-size-3xl: 1.9rem;     /* 38px */
+  --font-size-xs: 0.8rem;      /* 16px */
+  --font-size-sm: 0.95rem;     /* 19px */
+  --font-size-base: 1.1rem;    /* 22px */
+  --font-size-lg: 1.25rem;     /* 25px */
+  --font-size-xl: 1.5rem;      /* 30px */
+  --font-size-2xl: 1.8rem;     /* 36px */
+  --font-size-3xl: 2.2rem;     /* 44px */
 
   /* Transitions */
   --transition-fast: 150ms ease;

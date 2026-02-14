@@ -21,7 +21,7 @@ function switchAlertTab(tab, el) {
 
 // ---- Summary Stats ----
 function updateAlertSummary() {
-  const alerts = JSON.parse(localStorage.getItem('aurea_alerts') || '[]');
+  const alerts = db.getAlerts();
   const caregivers = db.getCaregivers();
 
   document.getElementById('totalAlerts').textContent = alerts.length;
@@ -46,6 +46,7 @@ function loadCaregivers() {
   list.innerHTML = caregivers.map(cg => {
     const initials = cg.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
     const relLabel = { family: '👨‍👩‍👦 Family', nurse: '👩‍⚕️ Nurse', doctor: '🩺 Doctor', friend: '🤝 Friend', other: '📌 Other' };
+    const relationKey = cg.relation || cg.relationship || 'other';
     const user = db.getUser();
     const patientName = user.name || 'Your loved one';
     const alertMsg = encodeURIComponent(`Hi ${cg.name}, this is an alert from Aurea. ${patientName} may need your help. Please check on them.`);
@@ -58,7 +59,7 @@ function loadCaregivers() {
         <div class="caregiver-info">
           <div class="caregiver-name">${cg.name}</div>
           <div class="caregiver-detail">${cg.email}</div>
-          <div class="caregiver-detail">${relLabel[cg.relation] || cg.relation}${cg.phone ? ' • ' + cg.phone : ''}</div>
+          <div class="caregiver-detail">${relLabel[relationKey] || relationKey}${cg.phone ? ' • ' + cg.phone : ''}</div>
           <div class="quick-contact">
             ${phone ? `<a href="tel:${phone}" class="quick-btn call">📞 Call</a>` : ''}
             ${phone ? `<a href="sms:${phone}?body=${alertMsg}" class="quick-btn sms">💬 SMS</a>` : ''}
@@ -130,7 +131,7 @@ function deleteCaregiver(id) {
 
 // ---- Alert History ----
 function loadAlertHistory() {
-  const alerts = JSON.parse(localStorage.getItem('aurea_alerts') || '[]');
+  const alerts = db.getAlerts();
   const container = document.getElementById('alertHistory');
   const empty = document.getElementById('emptyAlerts');
 
@@ -173,16 +174,10 @@ function loadAlertHistory() {
 }
 
 function resolveAlert(id) {
-  const alerts = JSON.parse(localStorage.getItem('aurea_alerts') || '[]');
-  const alert = alerts.find(a => a.id === id);
-  if (alert) {
-    alert.resolved = true;
-    alert.resolvedAt = new Date().toISOString();
-    localStorage.setItem('aurea_alerts', JSON.stringify(alerts));
-    loadAlertHistory();
-    updateAlertSummary();
-    showToast('Alert resolved');
-  }
+  db.resolveAlert(id);
+  loadAlertHistory();
+  updateAlertSummary();
+  showToast('Alert resolved');
 }
 
 // ---- Settings ----
@@ -194,14 +189,14 @@ function loadAlertSettings() {
   document.getElementById('alertMethod').value = method;
 
   // Preferences
-  document.getElementById('autoAlertToggle').checked = settings.autoAlert !== false;
+  document.getElementById('autoAlertToggle').checked = settings.alertCaregiverOnDistress !== false;
   document.getElementById('alertCooldown').value = (settings.alertCooldownMinutes || 30).toString();
   document.getElementById('maxDailyAlerts').value = (settings.maxAlertsPerDay || 3).toString();
 }
 
 function saveAlertPreferences() {
   const settings = db.getAutomationSettings();
-  settings.autoAlert = document.getElementById('autoAlertToggle').checked;
+  settings.alertCaregiverOnDistress = document.getElementById('autoAlertToggle').checked;
   settings.alertCooldownMinutes = parseInt(document.getElementById('alertCooldown').value);
   settings.maxAlertsPerDay = parseInt(document.getElementById('maxDailyAlerts').value);
   db.saveAutomationSettings(settings);
