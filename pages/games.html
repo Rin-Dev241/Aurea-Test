@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#D4A574" />
+    <title>Aurea — Brain Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/games.css" />
+    <link rel="icon" type="image/png" href="/assets/icons/aurea.png" />
+    <link rel="apple-touch-icon" href="/assets/icons/aurea.png" />
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="page-content page-enter">
+        <!-- Page Header -->
+        <div class="page-header">
+          <button class="back-btn" onclick="navigateTo('dashboard.html')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 12H5" />
+              <path d="M12 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 class="page-header-title">Brain Games</h1>
+        </div>
+
+        <p class="text-body mb-lg">
+          Keep your mind sharp with fun cognitive exercises!
+        </p>
+
+        <!-- Category Filter -->
+        <div
+          style="
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            padding-bottom: 4px;
+          "
+        >
+          <span class="chip active" onclick="filterGames('all', this)"
+            >🎮 All</span
+          >
+          <span class="chip" onclick="filterGames('memory', this)"
+            >🧠 Memory</span
+          >
+          <span class="chip" onclick="filterGames('attention', this)"
+            >👁️ Attention</span
+          >
+          <span class="chip" onclick="filterGames('problem', this)"
+            >🧩 Problem</span
+          >
+          <span class="chip" onclick="filterGames('language', this)"
+            >📝 Language</span
+          >
+        </div>
+
+        <!-- ===== GAMES HUB ===== -->
+        <div class="games-grid" id="gamesGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- ===== GAME PLAY AREA (hidden until game starts) ===== -->
+        <div id="gamePlayArea" class="hidden">
+          <div class="game-header">
+            <button class="btn btn-ghost btn-sm" onclick="exitGame()">
+              ← Back
+            </button>
+            <div class="game-timer" id="gameTimer">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="20"
+                height="20"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span id="timerDisplay">0:00</span>
+            </div>
+            <div class="game-score-display">
+              ⭐ <span id="scoreDisplay">0</span>
+            </div>
+          </div>
+
+          <div class="game-board" id="gameBoard">
+            <!-- Game content rendered here -->
+          </div>
+        </div>
+
+        <!-- ===== GAME COMPLETE ===== -->
+        <div id="gameCompleteArea" class="hidden">
+          <div class="game-complete">
+            <div class="trophy">🏆</div>
+            <h2>Well Done!</h2>
+            <div class="final-score" id="finalScore">100</div>
+            <div class="stats">
+              <div class="stat-item">
+                <div class="stat-value" id="finalTime">0:30</div>
+                <div class="stat-label">Time</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="finalMoves">12</div>
+                <div class="stat-label">Moves</div>
+              </div>
+            </div>
+            <div class="game-actions">
+              <button class="btn btn-secondary" onclick="exitGame()">
+                Back to Games
+              </button>
+              <button class="btn btn-primary" onclick="replayGame()">
+                Play Again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /page-content -->
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav" id="bottomNav">
+        <a href="dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+          </svg>
+          <span>Home</span>
+        </a>
+        <a href="games.html" class="nav-item active">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M9.5 2A5.5 5.5 0 0 0 4 7.5c0 1.58.67 3 1.74 4.01L4 16l3.5-1.5A5.5 5.5 0 0 0 9.5 15a5.5 5.5 0 0 0 0-11v-2z"
+            />
+            <path
+              d="M14.5 2A5.5 5.5 0 0 1 20 7.5c0 1.58-.67 3-1.74 4.01L20 16l-3.5-1.5A5.5 5.5 0 0 1 14.5 15a5.5 5.5 0 0 1 0-11v-2z"
+            />
+          </svg>
+          <span>Brain</span>
+        </a>
+        <a href="memory.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          <span>Memories</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span>Alerts</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/automation.js"></script>
+    <script src="../assets/js/games.js"></script>
+  </body>
+</html>

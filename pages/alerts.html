@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
+    <meta name="theme-color" content="#D4A574" />
+    <title>Caregiver Care — Aurea</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="icon" type="image/png" href="/assets/icons/aurea.png" />
+    <link rel="apple-touch-icon" href="/assets/icons/aurea.png" />
+    <style>
+      /* Alert-specific styles */
+      .alert-summary {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .alert-stat {
+        flex: 1;
+        background: var(--color-bg-card);
+        border-radius: var(--radius-md);
+        padding: 14px;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+      }
+      .alert-stat .stat-num {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--color-primary);
+      }
+      .alert-stat .stat-label {
+        font-size: 11px;
+        color: var(--color-text-secondary);
+        margin-top: 2px;
+      }
+      .alert-stat.danger .stat-num {
+        color: var(--color-danger);
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--color-text);
+        margin: 20px 0 10px;
+      }
+
+      /* Caregiver Cards */
+      .caregiver-card {
+        background: var(--color-bg-card);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 10px;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .caregiver-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .caregiver-info {
+        flex: 1;
+      }
+      .caregiver-name {
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--color-text);
+      }
+      .caregiver-detail {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        margin-top: 2px;
+      }
+      .caregiver-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .caregiver-actions button {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-edit {
+        background: var(--color-bg-elevated);
+        color: var(--color-primary);
+      }
+      .btn-del {
+        background: #fff0f0;
+        color: var(--color-danger);
+      }
+
+      /* Alert Timeline */
+      .alert-card {
+        background: var(--color-bg-card);
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid var(--color-warning);
+      }
+      .alert-card.resolved {
+        border-left-color: var(--color-success);
+        opacity: 0.7;
+      }
+      .alert-card.critical {
+        border-left-color: var(--color-danger);
+      }
+      .alert-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+      }
+      .alert-title {
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--color-text);
+      }
+      .alert-time {
+        font-size: 11px;
+        color: var(--color-text-secondary);
+      }
+      .alert-body {
+        font-size: 13px;
+        color: var(--color-text-secondary);
+        margin-top: 6px;
+      }
+      .alert-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .alert-actions .btn {
+        font-size: 12px;
+        padding: 6px 14px;
+      }
+      .alert-badge-severity {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 10px;
+        text-transform: uppercase;
+      }
+      .severity-high {
+        background: #fdecea;
+        color: var(--color-danger);
+      }
+      .severity-medium {
+        background: #fff3e0;
+        color: #e67e22;
+      }
+      .severity-low {
+        background: #e8f5e9;
+        color: var(--color-success);
+      }
+
+      /* Config / Settings Cards */
+      .config-card {
+        background: var(--color-bg-card);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-sm);
+      }
+      .config-card .text-caption {
+        margin-bottom: 12px;
+      }
+
+      /* ---- Form Inputs (explicit, cache-proof) ---- */
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: #2d2d2d;
+        margin-bottom: 6px;
+      }
+      .form-input,
+      input.form-input,
+      select.form-input,
+      textarea.form-input {
+        display: block;
+        width: 100%;
+        padding: 14px 16px;
+        font-family: "Nunito", sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        color: #2d2d2d;
+        background: #fff8f0;
+        border: 2px solid #e5e5ea !important;
+        border-radius: 12px;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+      }
+      .form-input:focus {
+        border-color: #d4a574 !important;
+      }
+      .form-input::placeholder {
+        color: #9a9a9a;
+      }
+      select.form-input {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239A9A9A' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 40px;
+      }
+
+      /* ---- Quick Contact Buttons ---- */
+      .quick-contact {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .quick-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+      .quick-btn.call {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+      .quick-btn.sms {
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+      .quick-btn.email-btn {
+        background: #fff3e0;
+        color: #e65100;
+      }
+      .quick-btn.whatsapp {
+        background: #e8f5e9;
+        color: #1b5e20;
+      }
+      .quick-btn:active {
+        transform: scale(0.95);
+      }
+      /* SOS Alert Button */
+      .sos-section {
+        margin-bottom: 16px;
+      }
+      .sos-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #e53935, #c62828);
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: 18px;
+        font-weight: 800;
+        font-family: "Nunito", sans-serif;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(229, 57, 53, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.2s;
+      }
+      .sos-btn:active {
+        transform: scale(0.97);
+      }
+      .sos-btn:hover {
+        box-shadow: 0 6px 24px rgba(229, 57, 53, 0.5);
+      }
+      .sos-subtitle {
+        text-align: center;
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header -->
+      <div class="page-header">
+        <button class="back-btn" onclick="navigateTo('dashboard.html')">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <h1 class="text-h2">Caregiver Care</h1>
+        <div style="width: 40px"></div>
+      </div>
+
+      <!-- Alert Summary -->
+      <div class="alert-summary">
+        <div class="alert-stat">
+          <div class="stat-num" id="totalAlerts">0</div>
+          <div class="stat-label">Total Alerts</div>
+        </div>
+        <div class="alert-stat danger">
+          <div class="stat-num" id="unresolvedAlerts">0</div>
+          <div class="stat-label">Unresolved</div>
+        </div>
+        <div class="alert-stat">
+          <div class="stat-num" id="caregiverCount">0</div>
+          <div class="stat-label">Caregivers</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <button class="tab active" onclick="switchAlertTab('contacts', this)">
+          Contacts
+        </button>
+        <button class="tab" onclick="switchAlertTab('alerts', this)">
+          Alert History
+        </button>
+        <button class="tab" onclick="switchAlertTab('settings', this)">
+          Settings
+        </button>
+      </div>
+
+      <!-- Contacts Tab -->
+      <div id="contactsPanel">
+        <!-- SOS Quick Alert -->
+        <div class="sos-section">
+          <button class="sos-btn" onclick="sendSOSAlert()">
+            🚨 Send Alert to All Caregivers
+          </button>
+          <p class="sos-subtitle">
+            Opens your phone's messaging to contact all caregivers
+          </p>
+        </div>
+
+        <h3 class="section-title">Your Caregivers</h3>
+        <div id="caregiverList">
+          <!-- Populated by JS -->
+        </div>
+        <div class="empty-state hidden" id="emptyCaregivers">
+          <div class="empty-icon">👥</div>
+          <p class="text-body">No caregivers added</p>
+          <p class="text-caption">
+            Add a caregiver to receive alerts when you need help
+          </p>
+        </div>
+        <button
+          class="btn btn-primary btn-block mt-md"
+          onclick="showAddCaregiver()"
+        >
+          + Add Caregiver
+        </button>
+      </div>
+
+      <!-- Alerts Tab -->
+      <div id="alertsPanel" class="hidden">
+        <h3 class="section-title">Alert History</h3>
+        <div id="alertHistory">
+          <!-- Populated by JS -->
+        </div>
+        <div class="empty-state hidden" id="emptyAlerts">
+          <div class="empty-icon">🔔</div>
+          <p class="text-body">No alerts yet</p>
+          <p class="text-caption">
+            Alerts are sent automatically when emotional distress is detected
+          </p>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settingsPanel" class="hidden">
+        <h3 class="section-title">Alert Method</h3>
+        <div class="config-card">
+          <p class="text-caption">
+            Alerts use your phone's native messaging — no API keys needed! When
+            distress is detected, you can reach caregivers via Call, SMS,
+            WhatsApp, or Email.
+          </p>
+          <div class="form-group">
+            <label class="form-label">Preferred alert method</label>
+            <select class="form-input" id="alertMethod">
+              <option value="sms">📱 SMS / Text Message</option>
+              <option value="whatsapp">💬 WhatsApp</option>
+              <option value="email">📧 Email</option>
+              <option value="call">📞 Phone Call</option>
+            </select>
+          </div>
+        </div>
+
+        <h3 class="section-title">Alert Preferences</h3>
+        <div class="config-card">
+          <div class="form-group">
+            <label class="toggle-label">
+              <span>Auto-send alerts on distress</span>
+              <label class="toggle">
+                <input type="checkbox" id="autoAlertToggle" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Alert cooldown (minutes)</label>
+            <select class="form-input" id="alertCooldown">
+              <option value="15">15 minutes</option>
+              <option value="30" selected>30 minutes</option>
+              <option value="60">1 hour</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Max alerts per day</label>
+            <select class="form-input" id="maxDailyAlerts">
+              <option value="3" selected>3</option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <button
+            class="btn btn-primary btn-block"
+            onclick="saveAlertPreferences()"
+          >
+            Save Preferences
+          </button>
+        </div>
+      </div>
+
+      <!-- Add Caregiver Modal -->
+      <div class="modal" id="caregiverModal">
+        <div class="modal-backdrop" onclick="closeCaregiverModal()"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="text-h3" id="caregiverModalTitle">Add Caregiver</h2>
+            <button class="modal-close" onclick="closeCaregiverModal()">
+              ✕
+            </button>
+          </div>
+          <form id="caregiverForm" onsubmit="saveCaregiver(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input
+                type="text"
+                class="form-input"
+                id="caregiverName"
+                placeholder="e.g., Maria Santos"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input
+                type="email"
+                class="form-input"
+                id="caregiverEmail"
+                placeholder="caregiver@email.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone (optional)</label>
+              <input
+                type="tel"
+                class="form-input"
+                id="caregiverPhone"
+                placeholder="09XX XXX XXXX"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Relationship</label>
+              <select class="form-input" id="caregiverRelation">
+                <option value="family">Family Member</option>
+                <option value="nurse">Nurse/Caretaker</option>
+                <option value="doctor">Doctor</option>
+                <option value="friend">Friend</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <input type="hidden" id="editCaregiverId" value="" />
+            <button type="submit" class="btn btn-primary btn-block">
+              Save Caregiver
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav" id="bottomNav">
+        <a href="dashboard.html" class="nav-item">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          </svg>
+          <span>Home</span>
+        </a>
+        <a href="emotion.html" class="nav-item">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+            <line x1="9" y1="9" x2="9.01" y2="9" />
+            <line x1="15" y1="9" x2="15.01" y2="9" />
+          </svg>
+          <span>Emotions</span>
+        </a>
+        <a href="games.html" class="nav-item">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <path d="M12 8v8M8 12h8" />
+          </svg>
+          <span>Games</span>
+        </a>
+        <a href="reminders.html" class="nav-item">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span>Reminders</span>
+        </a>
+        <a href="alerts.html" class="nav-item active">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+            />
+          </svg>
+          <span>Care</span>
+        </a>
+      </nav>
+    </div>
+
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/caregiver-alert.js"></script>
+    <div class="toast-container" id="toastContainer"></div>
+  </body>
+</html>

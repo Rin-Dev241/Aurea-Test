@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#D4A574" />
+    <title>Aurea — Welcome</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/png" href="/assets/icons/aurea.png" />
+    <link rel="apple-touch-icon" href="/assets/icons/aurea.png" />
+    <style>
+      .auth-page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: var(--space-xl);
+      }
+      .auth-logo {
+        text-align: center;
+        margin-bottom: var(--space-2xl);
+      }
+      .auth-logo .logo-icon {
+        font-size: 64px;
+        margin-bottom: var(--space-md);
+        display: block;
+      }
+      .auth-logo h1 {
+        font-size: var(--font-size-3xl);
+        font-weight: 800;
+        color: var(--color-primary-dark);
+        margin-bottom: var(--space-xs);
+      }
+      .auth-logo p {
+        color: var(--color-text-secondary);
+        font-size: var(--font-size-sm);
+      }
+      .auth-form {
+        margin-bottom: var(--space-lg);
+      }
+      .auth-divider {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        margin: var(--space-lg) 0;
+        color: var(--color-text-tertiary);
+        font-size: var(--font-size-sm);
+      }
+      .auth-divider::before,
+      .auth-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e5e5ea;
+      }
+      .auth-footer {
+        text-align: center;
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+      }
+      .auth-footer a {
+        color: var(--color-primary-dark);
+        font-weight: 600;
+      }
+      .role-selector {
+        display: flex;
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+      }
+      .role-card {
+        flex: 1;
+        padding: var(--space-lg);
+        background: var(--color-bg-card);
+        border: 2px solid #e5e5ea;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--transition-base);
+      }
+      .role-card.selected {
+        border-color: var(--color-primary);
+        background: var(--color-primary-bg);
+      }
+      .role-card:hover:not(.selected) {
+        border-color: var(--color-primary-light);
+      }
+      .role-card .role-emoji {
+        font-size: 36px;
+        display: block;
+        margin-bottom: var(--space-sm);
+      }
+      .role-card .role-name {
+        font-size: var(--font-size-sm);
+        font-weight: 700;
+        color: var(--color-text-primary);
+      }
+      .role-card .role-desc {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-secondary);
+        margin-top: 4px;
+      }
+      .error-message {
+        background: rgba(255, 118, 117, 0.1);
+        color: var(--color-danger);
+        padding: var(--space-sm) var(--space-md);
+        border-radius: var(--radius-sm);
+        font-size: var(--font-size-sm);
+        margin-bottom: var(--space-md);
+        display: none;
+      }
+      .error-message.show {
+        display: block;
+      }
+      .auth-tabs {
+        display: flex;
+        background: var(--color-bg-card);
+        border-radius: var(--radius-md);
+        padding: 4px;
+        margin-bottom: var(--space-lg);
+        box-shadow: var(--shadow-sm);
+      }
+      .auth-tab {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+        color: var(--color-text-secondary);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--transition-base);
+      }
+      .auth-tab.active {
+        background: var(--color-primary);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="auth-page">
+        <!-- Logo -->
+        <div class="auth-logo">
+          <img
+            src="/assets/icons/aurea.png"
+            alt="Aurea Logo"
+            style="
+              width: 80px;
+              height: 80px;
+              margin: 0 auto var(--space-md);
+              display: block;
+              border-radius: 20px;
+            "
+          />
+          <h1>Aurea</h1>
+          <p>Early Alzheimer's Care & Caregiver Support</p>
+        </div>
+
+        <!-- Auth Tabs -->
+        <div class="auth-tabs">
+          <div
+            class="auth-tab active"
+            onclick="switchAuthTab('login')"
+            id="tabLogin"
+          >
+            Sign In
+          </div>
+          <div
+            class="auth-tab"
+            onclick="switchAuthTab('signup')"
+            id="tabSignup"
+          >
+            Sign Up
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="authError"></div>
+
+        <!-- LOGIN FORM -->
+        <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+          <div class="input-group">
+            <label for="loginEmail">Email Address</label>
+            <input
+              type="email"
+              id="loginEmail"
+              class="input-field"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="loginPassword">Password</label>
+            <input
+              type="password"
+              id="loginPassword"
+              class="input-field"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+            Sign In
+          </button>
+        </form>
+
+        <!-- SIGNUP FORM -->
+        <form
+          class="auth-form hidden"
+          id="signupForm"
+          onsubmit="handleSignup(event)"
+        >
+          <div class="input-group">
+            <label for="signupName">Full Name</label>
+            <input
+              type="text"
+              id="signupName"
+              class="input-field"
+              placeholder="Your full name"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="signupEmail">Email Address</label>
+            <input
+              type="email"
+              id="signupEmail"
+              class="input-field"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="signupPassword">Password</label>
+            <input
+              type="password"
+              id="signupPassword"
+              class="input-field"
+              placeholder="Create a password (min 6 chars)"
+              required
+              minlength="6"
+            />
+          </div>
+
+          <!-- Role Selection -->
+          <div class="form-section">
+            <div class="form-section-title" style="margin-bottom: 8px">
+              I am a:
+            </div>
+            <div class="role-selector">
+              <div
+                class="role-card selected"
+                onclick="selectRole('patient')"
+                id="rolePatient"
+              >
+                <span class="role-emoji">🧓</span>
+                <div class="role-name">Patient</div>
+                <div class="role-desc">Memory care user</div>
+              </div>
+              <div
+                class="role-card"
+                onclick="selectRole('caregiver')"
+                id="roleCaregiver"
+              >
+                <span class="role-emoji">👨‍⚕️</span>
+                <div class="role-name">Caregiver</div>
+                <div class="role-desc">Care provider</div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            id="signupBtn"
+          >
+            Create Account
+          </button>
+        </form>
+
+        <!-- Quick Demo Access -->
+        <div class="auth-divider">or</div>
+        <button class="btn btn-secondary btn-block" onclick="handleDemoLogin()">
+          🌟 Try Demo (No Account Needed)
+        </button>
+
+        <div class="auth-footer mt-lg">
+          <p>Protected & Private · Made with 💛</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(() => {});
+      }
+    </script>
+  </body>
+</html>

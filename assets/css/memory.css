@@ -1,0 +1,248 @@
+/* ============================================
+   AUREA — Memory Recall Styles
+   ============================================ */
+
+/* --- Gallery Grid --- */
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.memory-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform var(--transition-base);
+}
+
+.memory-card:hover {
+  transform: scale(1.02);
+}
+
+.memory-card.featured {
+  grid-column: span 2;
+}
+
+.memory-card .media-wrapper {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.memory-card.featured .media-wrapper {
+  aspect-ratio: 16/9;
+}
+
+.memory-card .media-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.memory-card:hover .media-wrapper img {
+  transform: scale(1.05);
+}
+
+.memory-card .media-wrapper .play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.memory-card .media-wrapper .play-overlay svg {
+  width: 48px;
+  height: 48px;
+  color: white;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.memory-card .card-info {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.memory-card .card-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memory-card .card-date {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* --- Audio Player Card --- */
+.audio-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-md);
+}
+
+.audio-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-dark);
+  flex-shrink: 0;
+}
+
+.audio-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.audio-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.audio-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-duration {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.audio-play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.audio-play-btn:hover {
+  transform: scale(1.1);
+}
+
+.audio-play-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- Upload Area --- */
+.upload-area {
+  border: 2px dashed var(--color-primary-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-bottom: var(--space-lg);
+}
+
+.upload-area:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.upload-area svg {
+  width: 48px;
+  height: 48px;
+  color: var(--color-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.upload-area h3 {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.upload-area p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.upload-area input[type="file"] {
+  display: none;
+}
+
+/* --- Media Viewer (Fullscreen) --- */
+.media-viewer {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.media-viewer.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.media-viewer .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-viewer img,
+.media-viewer video {
+  max-width: 90%;
+  max-height: 80vh;
+  border-radius: var(--radius-md);
+}
+
+.media-viewer .caption {
+  color: white;
+  text-align: center;
+  padding: var(--space-md);
+  max-width: 300px;
+}
+
+.media-viewer .caption h3 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-xs);
+}
+
+.media-viewer .caption p {
+  font-size: var(--font-size-sm);
+  opacity: 0.7;
+}

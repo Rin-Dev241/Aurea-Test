@@ -1,0 +1,18 @@
+{
+  "name": "Aurea — Alzheimer's Care Companion",
+  "short_name": "Aurea",
+  "description": "A compassionate care companion for Alzheimer's patients with emotion tracking, brain games, and caregiver alerts.",
+  "start_url": "/pages/dashboard.html",
+  "display": "standalone",
+  "background_color": "#FFF8F0",
+  "theme_color": "#D4A574",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/icons/aurea.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

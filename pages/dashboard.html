@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#D4A574" />
+    <meta
+      name="description"
+      content="Aurea — Early Alzheimer's Care & Caregiver Support"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Aurea — Care Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
+    <link rel="icon" type="image/png" href="/assets/icons/aurea.png" />
+    <link rel="apple-touch-icon" href="/assets/icons/aurea.png" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+      <img
+        src="/assets/icons/aurea.png"
+        alt="Aurea"
+        style="
+          width: 64px;
+          height: 64px;
+          border-radius: 16px;
+          margin-bottom: 12px;
+        "
+      />
+      <div class="logo">Aurea</div>
+      <div class="spinner"></div>
+    </div>
+
+    <div class="app-container" id="app">
+      <div class="page-content page-enter">
+        <!-- ===== HEADER / GREETING ===== -->
+        <div class="dashboard-header stagger-1">
+          <div class="greeting-section">
+            <div class="greeting-label" id="greetingLabel">GOOD MORNING</div>
+            <h1 class="greeting-name" id="greetingName">Beloved Patient</h1>
+            <p class="greeting-subtitle">How is your memory today?</p>
+            <p class="greeting-date" id="greetingDate">Saturday, February 14</p>
+          </div>
+          <div
+            class="profile-avatar"
+            id="profileAvatar"
+            onclick="navigateTo('profile.html')"
+          >
+            <span id="avatarInitial">BP</span>
+          </div>
+        </div>
+
+        <!-- ===== EMOTION STATUS (Quick check) ===== -->
+        <div
+          class="emotion-status stagger-2"
+          id="emotionStatus"
+          onclick="navigateTo('emotion.html')"
+        >
+          <span class="emotion-emoji" id="currentEmoji">😊</span>
+          <div class="emotion-info">
+            <div class="emotion-label" id="currentEmotionLabel">
+              How are you feeling?
+            </div>
+            <div class="emotion-sublabel" id="currentEmotionSub">
+              Tap to check in
+            </div>
+          </div>
+          <div class="emotion-action">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- ===== DAILY GOALS CARD ===== -->
+        <div class="daily-goals-card stagger-3">
+          <div class="progress-ring" id="progressRing">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="bg" cx="40" cy="40" r="34" />
+              <circle
+                class="fill"
+                cx="40"
+                cy="40"
+                r="34"
+                stroke-dasharray="213.6"
+                stroke-dashoffset="213.6"
+                id="progressCircle"
+              />
+            </svg>
+            <div class="percentage" id="progressPercent">0%</div>
+          </div>
+          <div class="goals-info">
+            <div class="goals-badge">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                />
+              </svg>
+              Pro Care
+            </div>
+            <div class="goals-score-label">Daily Score</div>
+            <div class="goals-tasks">
+              <strong id="tasksCompleted">0</strong> of
+              <strong id="tasksTotal">6</strong> tasks completed
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== QUICK ACTIONS ===== -->
+        <div class="section-header">
+          <h2>Quick Actions</h2>
+          <a href="#" class="see-all">See all</a>
+        </div>
+        <div class="quick-actions-grid stagger-4">
+          <div class="quick-action-item" onclick="navigateTo('games.html')">
+            <div class="quick-action-icon brain">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9.5 2A5.5 5.5 0 0 0 4 7.5c0 1.58.67 3 1.74 4.01L4 16l3.5-1.5A5.5 5.5 0 0 0 9.5 15a5.5 5.5 0 0 0 0-11v-2z"
+                />
+                <path
+                  d="M14.5 2A5.5 5.5 0 0 1 20 7.5c0 1.58-.67 3-1.74 4.01L20 16l-3.5-1.5A5.5 5.5 0 0 1 14.5 15a5.5 5.5 0 0 1 0-11v-2z"
+                />
+                <path d="M12 2v20" />
+              </svg>
+            </div>
+            <span class="quick-action-label">Brain</span>
+          </div>
+          <div class="quick-action-item" onclick="navigateTo('emotion.html')">
+            <div class="quick-action-icon heart">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                />
+              </svg>
+            </div>
+            <span class="quick-action-label">Heart</span>
+          </div>
+          <div class="quick-action-item" onclick="navigateTo('reminders.html')">
+            <div class="quick-action-icon plan">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+                <path d="M8 14h.01" />
+                <path d="M12 14h.01" />
+                <path d="M16 14h.01" />
+                <path d="M8 18h.01" />
+                <path d="M12 18h.01" />
+              </svg>
+            </div>
+            <span class="quick-action-label">Plan</span>
+          </div>
+          <div class="quick-action-item" onclick="navigateTo('memory.html')">
+            <div class="quick-action-icon photos">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+            </div>
+            <span class="quick-action-label">Photos</span>
+          </div>
+        </div>
+
+        <!-- ===== UPCOMING SCHEDULE ===== -->
+        <div class="section-header">
+          <h2>Upcoming Schedule</h2>
+          <a href="reminders.html" class="see-all">See all</a>
+        </div>
+        <div class="schedule-list stagger-5" id="scheduleList">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- ===== MEMORY TIP BANNER ===== -->
+        <div class="tip-banner stagger-6" id="tipBanner">
+          <span class="tip-icon">💡</span>
+          <div class="tip-content">
+            <div class="tip-label">Memory Tip</div>
+            <div class="tip-text" id="tipText">
+              Drink water to stay hydrated and keep your brain sharp!
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== DAILY QUOTE ===== -->
+        <div class="quote-card" id="quoteCard">
+          <div class="quote-text" id="quoteText">
+            "Every day is a new beginning. Take a deep breath, smile, and start
+            again."
+          </div>
+          <div class="quote-author" id="quoteAuthor">— Daily Motivation</div>
+        </div>
+      </div>
+      <!-- /page-content -->
+
+      <!-- ===== BOTTOM NAVIGATION ===== -->
+      <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+          </svg>
+          <span>Home</span>
+        </a>
+        <a href="games.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M9.5 2A5.5 5.5 0 0 0 4 7.5c0 1.58.67 3 1.74 4.01L4 16l3.5-1.5A5.5 5.5 0 0 0 9.5 15a5.5 5.5 0 0 0 0-11v-2z"
+            />
+            <path
+              d="M14.5 2A5.5 5.5 0 0 1 20 7.5c0 1.58-.67 3-1.74 4.01L20 16l-3.5-1.5A5.5 5.5 0 0 1 14.5 15a5.5 5.5 0 0 1 0-11v-2z"
+            />
+          </svg>
+          <span>Brain</span>
+        </a>
+        <a href="memory.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          <span>Memories</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span>Alerts</span>
+          <span class="nav-badge hidden" id="alertBadge">0</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+    </div>
+    <!-- /app-container -->
+
+    <!-- ===== SUGGESTION MODAL (Auto-trigger for negative emotions) ===== -->
+    <div class="dialog-overlay" id="suggestionDialog">
+      <div class="dialog">
+        <div class="dialog-icon" id="suggestionIcon">💛</div>
+        <h3 id="suggestionTitle">We're here for you</h3>
+        <p id="suggestionText">
+          Would you like to look at some happy memories or play a fun brain
+          game?
+        </p>
+        <div class="dialog-actions">
+          <button
+            class="btn btn-secondary"
+            onclick="
+              navigateTo('memory.html');
+              closeSuggestion();
+            "
+          >
+            📸 Memories
+          </button>
+          <button
+            class="btn btn-primary"
+            onclick="
+              navigateTo('games.html');
+              closeSuggestion();
+            "
+          >
+            🧠 Games
+          </button>
+        </div>
+        <button
+          class="btn btn-ghost btn-block mt-md"
+          onclick="closeSuggestion()"
+        >
+          Maybe later
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/automation.js"></script>
+    <script src="../assets/js/walkthrough.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        initDashboard();
+      });
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(() => {});
+      }
+    </script>
+  </body>
+</html>

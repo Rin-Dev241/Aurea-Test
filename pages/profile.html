@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
+    <meta name="theme-color" content="#D4A574" />
+    <title>Profile — Aurea</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="icon" type="image/png" href="/assets/icons/aurea.png" />
+    <link rel="apple-touch-icon" href="/assets/icons/aurea.png" />
+    <style>
+      .profile-header {
+        text-align: center;
+        padding: 24px 0;
+      }
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: 800;
+        margin: 0 auto 12px;
+      }
+      .profile-name {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--color-text);
+      }
+      .profile-role {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        background: var(--color-primary-light);
+        color: var(--color-primary);
+        padding: 3px 12px;
+        border-radius: 12px;
+        margin-top: 4px;
+      }
+
+      .settings-section {
+        margin-bottom: 24px;
+      }
+      .settings-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        padding: 0 4px;
+      }
+      .settings-card {
+        background: var(--color-bg-card);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      .settings-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--color-border);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .settings-item:last-child {
+        border-bottom: none;
+      }
+      .settings-item:active {
+        background: var(--color-bg-elevated);
+      }
+      .settings-item-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .settings-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .settings-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-text);
+      }
+      .settings-desc {
+        font-size: 11px;
+        color: var(--color-text-secondary);
+        margin-top: 1px;
+      }
+      .settings-value {
+        font-size: 13px;
+        color: var(--color-text-secondary);
+      }
+
+      .stat-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .stat-card {
+        flex: 1;
+        background: var(--color-bg-card);
+        border-radius: var(--radius-md);
+        padding: 14px;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+      }
+      .stat-card .num {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--color-primary);
+      }
+      .stat-card .lbl {
+        font-size: 11px;
+        color: var(--color-text-secondary);
+        margin-top: 2px;
+      }
+
+      .logout-btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        margin: 20px 0 40px;
+        background: #fff0f0;
+        border: none;
+        border-radius: var(--radius-md);
+        color: var(--color-danger);
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .logout-btn:active {
+        background: #ffe0e0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header -->
+      <div class="page-header">
+        <button class="back-btn" onclick="navigateTo('dashboard.html')">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <h1 class="text-h2">Profile</h1>
+        <div style="width: 40px"></div>
+      </div>
+
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-avatar" id="profileAvatar">A</div>
+        <div class="profile-name" id="profileName">User</div>
+        <div class="profile-role" id="profileRole">Patient</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="num" id="statEmotions">0</div>
+          <div class="lbl">Emotions Logged</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="statGames">0</div>
+          <div class="lbl">Games Played</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="statMemories">0</div>
+          <div class="lbl">Memories</div>
+        </div>
+      </div>
+
+      <!-- General Settings -->
+      <div class="settings-section">
+        <div class="settings-title">General</div>
+        <div class="settings-card">
+          <div class="settings-item" onclick="editProfileName()">
+            <div class="settings-item-left">
+              <div class="settings-icon" style="background: #fff3e0">👤</div>
+              <div>
+                <div class="settings-label">Display Name</div>
+                <div class="settings-desc" id="settingName">Not set</div>
+              </div>
+            </div>
+            <span class="settings-value">Edit →</span>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-icon" style="background: #e8f5e9">📖</div>
+              <div>
+                <div class="settings-label">Quote Type</div>
+                <div class="settings-desc">Daily inspiration source</div>
+              </div>
+            </div>
+            <label class="toggle">
+              <input
+                type="checkbox"
+                id="quoteToggle"
+                onchange="toggleQuotePref()"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="settings-section">
+        <div class="settings-title">Notifications</div>
+        <div class="settings-card">
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-icon" style="background: #e3f2fd">🔔</div>
+              <div>
+                <div class="settings-label">Reminder Alerts</div>
+                <div class="settings-desc">Browser notifications</div>
+              </div>
+            </div>
+            <label class="toggle">
+              <input
+                type="checkbox"
+                id="notifToggle"
+                onchange="toggleNotifPref()"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-icon" style="background: #fce4ec">📧</div>
+              <div>
+                <div class="settings-label">Caregiver Emails</div>
+                <div class="settings-desc">Auto-send on distress</div>
+              </div>
+            </div>
+            <label class="toggle">
+              <input
+                type="checkbox"
+                id="emailToggle"
+                onchange="toggleEmailPref()"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data -->
+      <div class="settings-section">
+        <div class="settings-title">Data</div>
+        <div class="settings-card">
+          <div class="settings-item" onclick="exportData()">
+            <div class="settings-item-left">
+              <div class="settings-icon" style="background: #e0f7fa">💾</div>
+              <div>
+                <div class="settings-label">Export Data</div>
+                <div class="settings-desc">Download all your data as JSON</div>
+              </div>
+            </div>
+            <span class="settings-value">→</span>
+          </div>
+          <div class="settings-item" onclick="clearAllData()">
+            <div class="settings-item-left">
+              <div class="settings-icon" style="background: #ffebee">🗑️</div>
+              <div>
+                <div class="settings-label">Clear All Data</div>
+                <div class="settings-desc" style="color: var(--color-danger)">
+                  This cannot be undone
+                </div>
+              </div>
+            </div>
+            <span class="settings-value">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="settings-section">
+        <div class="settings-title">About</div>
+        <div class="settings-card">
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-icon" style="background: #fff8e1">✨</div>
+              <div>
+                <div class="settings-label">Aurea</div>
+                <div class="settings-desc">Alzheimer's Care Companion v1.0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn" onclick="handleLogout()">Log Out</button>
+    </div>
+
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <div class="toast-container" id="toastContainer"></div>
+    <script>
+      // ---- Profile Init ----
+      document.addEventListener("DOMContentLoaded", () => {
+        const user = db.getUser();
+        if (user) {
+          const initials = (user.name || "A")
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+          document.getElementById("profileAvatar").textContent = initials;
+          document.getElementById("profileName").textContent =
+            user.name || "User";
+          document.getElementById("profileRole").textContent =
+            user.role === "caregiver" ? "Caregiver" : "Patient";
+          document.getElementById("settingName").textContent =
+            user.name || "Not set";
+        }
+
+        // Stats
+        const emotions = JSON.parse(
+          localStorage.getItem("aurea_emotions") || "[]",
+        );
+        const gameScores = JSON.parse(
+          localStorage.getItem("aurea_game_scores") || "[]",
+        );
+        const memories = db.getMemories();
+        document.getElementById("statEmotions").textContent = emotions.length;
+        document.getElementById("statGames").textContent = gameScores.length;
+        document.getElementById("statMemories").textContent = memories.length;
+
+        // Settings
+        const settings = db.getSettings();
+        document.getElementById("quoteToggle").checked =
+          settings.quoteType === "bible";
+        document.getElementById("notifToggle").checked =
+          settings.notifications !== false;
+        document.getElementById("emailToggle").checked =
+          settings.emailAlerts !== false;
+      });
+
+      function editProfileName() {
+        const newName = prompt("Enter your display name:");
+        if (newName && newName.trim()) {
+          const user = db.getUser() || {};
+          user.name = newName.trim();
+          db.setUser(user);
+          document.getElementById("profileName").textContent = user.name;
+          document.getElementById("settingName").textContent = user.name;
+          const initials = user.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+          document.getElementById("profileAvatar").textContent = initials;
+          showToast("Name updated!");
+        }
+      }
+
+      function toggleQuotePref() {
+        const settings = db.getSettings();
+        settings.quoteType = document.getElementById("quoteToggle").checked
+          ? "bible"
+          : "motivational";
+        db.saveSettings(settings);
+      }
+
+      function toggleNotifPref() {
+        const settings = db.getSettings();
+        settings.notifications = document.getElementById("notifToggle").checked;
+        db.saveSettings(settings);
+        if (settings.notifications) requestNotificationPermission();
+      }
+
+      function toggleEmailPref() {
+        const settings = db.getSettings();
+        settings.emailAlerts = document.getElementById("emailToggle").checked;
+        db.saveSettings(settings);
+      }
+
+      function exportData() {
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith("aurea_")) {
+            try {
+              data[key] = JSON.parse(localStorage.getItem(key));
+            } catch {
+              data[key] = localStorage.getItem(key);
+            }
+          }
+        }
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download =
+          "aurea-data-" + new Date().toISOString().split("T")[0] + ".json";
+        a.click();
+        showToast("Data exported!");
+      }
+
+      function clearAllData() {
+        if (!confirm("This will delete ALL your data. Are you sure?")) return;
+        if (!confirm("Really? This cannot be undone!")) return;
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith("aurea_")) keys.push(key);
+        }
+        keys.forEach((k) => localStorage.removeItem(k));
+        showToast("All data cleared");
+        setTimeout(() => (window.location.href = "index.html"), 1000);
+      }
+
+      function handleLogout() {
+        localStorage.removeItem("aurea_current_user");
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,661 @@
+/* ============================================
+   AUREA — Cognitive Games Styles
+   ============================================ */
+
+/* --- Games Hub --- */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.game-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: 2px solid transparent;
+}
+
+.game-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  border-color: var(--color-primary-light);
+}
+
+.game-card .game-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-sm);
+  font-size: 28px;
+}
+
+.game-card .game-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.game-card .game-difficulty {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.game-card .game-score {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  margin-top: var(--space-sm);
+}
+
+/* Game card category colors */
+.game-card[data-category="memory"] .game-icon { background: var(--color-brain-bg); }
+.game-card[data-category="attention"] .game-icon { background: var(--color-heart-bg); }
+.game-card[data-category="problem"] .game-icon { background: var(--color-plan-bg); }
+.game-card[data-category="language"] .game-icon { background: var(--color-photos-bg); }
+
+/* --- Game Play Area --- */
+.game-area {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.game-timer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.game-timer svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-primary);
+}
+
+.game-score-display {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.game-board {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Memory Match Game --- */
+.match-grid {
+  display: grid;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.match-grid.size-4x4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.match-grid.size-4x3 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.match-card {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  perspective: 600px;
+  user-select: none;
+}
+
+.match-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.match-card.flipped .match-card-inner {
+  transform: rotateY(180deg);
+}
+
+.match-card.matched .match-card-inner {
+  transform: rotateY(180deg);
+}
+
+.match-card.matched {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.match-card-front,
+.match-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.match-card-front {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  font-size: 20px;
+}
+
+.match-card-back {
+  background: var(--color-bg-card);
+  transform: rotateY(180deg);
+  font-size: 32px;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--color-primary-light);
+}
+
+/* --- Word Search --- */
+.word-grid {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto var(--space-lg);
+}
+
+.word-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  background: var(--color-bg-card);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.word-cell:hover {
+  background: var(--color-primary-bg);
+}
+
+.word-cell.selected {
+  background: var(--color-primary);
+  color: white;
+}
+
+.word-cell.found {
+  background: var(--color-plan-bg);
+  color: var(--color-plan);
+}
+
+.word-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.word-list .word {
+  padding: 6px 14px;
+  background: var(--color-bg-card);
+  border-radius: 20px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.word-list .word.found {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+/* --- Sequence Game --- */
+.sequence-display {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  margin-bottom: var(--space-xl);
+}
+
+.sequence-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  border: 3px solid transparent;
+}
+
+.sequence-btn.active {
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+.sequence-btn.red { background: #FF7675; }
+.sequence-btn.blue { background: #74B9FF; }
+.sequence-btn.green { background: #00B894; }
+.sequence-btn.yellow { background: #FDCB6E; }
+
+/* --- Game Complete --- */
+.game-complete {
+  text-align: center;
+  padding: var(--space-xl);
+  animation: emotionPop 0.5s ease;
+}
+
+.game-complete .trophy {
+  font-size: 72px;
+  margin-bottom: var(--space-md);
+}
+
+.game-complete h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+}
+
+.game-complete .final-score {
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  margin-bottom: var(--space-sm);
+}
+
+.game-complete .stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.game-complete .stat-item {
+  text-align: center;
+}
+
+.game-complete .stat-value {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.game-complete .stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.game-actions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.game-actions .btn {
+  flex: 1;
+}
+
+/* --- Trivia --- */
+.trivia-question {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  line-height: 1.4;
+}
+
+.trivia-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.trivia-option {
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-bg-card);
+  border: 2px solid #E5E5EA;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.trivia-option:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.trivia-option.correct {
+  border-color: var(--color-success);
+  background: var(--color-plan-bg);
+}
+
+.trivia-option.wrong {
+  border-color: var(--color-danger);
+  background: rgba(255, 118, 117, 0.1);
+}
+
+/* --- Jigsaw --- */
+.jigsaw-container {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  display: grid;
+  gap: 3px;
+  background: var(--color-text-tertiary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  padding: 3px;
+}
+
+.jigsaw-piece {
+  background-size: cover;
+  background-position: center;
+  border-radius: 4px;
+  cursor: grab;
+  transition: transform var(--transition-fast);
+}
+
+.jigsaw-piece:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.jigsaw-piece.placed {
+  opacity: 0.8;
+  cursor: default;
+}
+
+/* --- Sudoku --- */
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto var(--space-lg);
+  background: var(--color-text-tertiary);
+  padding: 3px;
+  border-radius: var(--radius-md);
+}
+
+.sudoku-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  background: var(--color-bg-card);
+  cursor: pointer;
+  user-select: none;
+}
+
+.sudoku-cell.fixed {
+  background: var(--color-primary-bg);
+  color: var(--color-primary-dark);
+  cursor: default;
+}
+
+.sudoku-cell.selected {
+  background: var(--color-primary);
+  color: white;
+}
+
+.sudoku-cell.error {
+  color: var(--color-danger);
+}
+
+.sudoku-numpad {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.sudoku-numpad button {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.sudoku-numpad button:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* --- Reaction Time --- */
+.reaction-area {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  user-select: none;
+}
+
+.reaction-area.waiting {
+  background: var(--color-danger);
+  color: white;
+}
+
+.reaction-area.ready {
+  background: var(--color-success);
+  color: white;
+}
+
+.reaction-area.result {
+  background: var(--color-primary-bg);
+}
+
+.reaction-area h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  text-align: center;
+}
+
+.reaction-area .time {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+/* --- Pattern Game --- */
+.pattern-display {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.pattern-item {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.pattern-item.mystery {
+  background: var(--color-primary);
+  color: white;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.pattern-options {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pattern-option {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+.pattern-option:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.pattern-option.correct {
+  border-color: var(--color-success);
+  background: var(--color-plan-bg);
+}
+
+.pattern-option.wrong {
+  border-color: var(--color-danger);
+  background: rgba(255, 118, 117, 0.1);
+}
+
+/* --- Category Sorting --- */
+.sorting-categories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.sorting-category {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  min-height: 120px;
+  border: 2px dashed #E5E5EA;
+  transition: border-color var(--transition-fast);
+}
+
+.sorting-category.drag-over {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.sorting-category h4 {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  text-align: center;
+}
+
+.sorting-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.sorting-item {
+  padding: 8px 16px;
+  background: var(--color-primary-bg);
+  border-radius: 20px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: grab;
+  user-select: none;
+  transition: transform var(--transition-fast);
+}
+
+.sorting-item:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+}
+
+.sorting-item.correct {
+  background: var(--color-plan-bg);
+  color: var(--color-plan);
+}
+
+.sorting-item.wrong {
+  background: rgba(255, 118, 117, 0.1);
+  color: var(--color-danger);
+}
+
+/* Spot the difference */
+.spot-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.spot-image {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  background: var(--color-bg-card);
+}
+
+.spot-image canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.spot-marker {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--color-success);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: spotPulse 1s ease infinite;
+}
+
+@keyframes spotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(0, 184, 148, 0); }
+}

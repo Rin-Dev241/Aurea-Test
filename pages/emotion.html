@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#D4A574" />
+    <title>Aurea — Emotion Check</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/emotions.css" />
+    <link rel="icon" type="image/png" href="/assets/icons/aurea.png" />
+    <link rel="apple-touch-icon" href="/assets/icons/aurea.png" />
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="page-content page-enter">
+        <!-- Page Header -->
+        <div class="page-header">
+          <button class="back-btn" onclick="navigateTo('dashboard.html')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 12H5" />
+              <path d="M12 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 class="page-header-title">How Are You Feeling?</h1>
+        </div>
+
+        <!-- Tab Bar: Manual vs Camera -->
+        <div class="tab-bar">
+          <div
+            class="tab-item active"
+            onclick="switchEmotionTab('manual')"
+            id="tabManual"
+          >
+            Manual
+          </div>
+          <div
+            class="tab-item"
+            onclick="switchEmotionTab('camera')"
+            id="tabCamera"
+          >
+            📸 Camera
+          </div>
+        </div>
+
+        <!-- ===== MANUAL EMOTION INPUT ===== -->
+        <div id="manualSection">
+          <p class="text-body mb-md">
+            Tap the emotion that best describes how you feel right now:
+          </p>
+
+          <div class="emotion-grid">
+            <div
+              class="emotion-card"
+              data-emotion="happy"
+              onclick="selectEmotion(this)"
+            >
+              <span class="emoji">😊</span>
+              <div class="label">Happy</div>
+              <div class="description">Feeling good & cheerful</div>
+            </div>
+            <div
+              class="emotion-card"
+              data-emotion="calm"
+              onclick="selectEmotion(this)"
+            >
+              <span class="emoji">😌</span>
+              <div class="label">Calm</div>
+              <div class="description">Peaceful & relaxed</div>
+            </div>
+            <div
+              class="emotion-card"
+              data-emotion="loved"
+              onclick="selectEmotion(this)"
+            >
+              <span class="emoji">🥰</span>
+              <div class="label">Loved</div>
+              <div class="description">Warm & connected</div>
+            </div>
+            <div
+              class="emotion-card"
+              data-emotion="tired"
+              onclick="selectEmotion(this)"
+            >
+              <span class="emoji">😴</span>
+              <div class="label">Tired</div>
+              <div class="description">Sleepy or low energy</div>
+            </div>
+            <div
+              class="emotion-card"
+              data-emotion="sad"
+              onclick="selectEmotion(this)"
+            >
+              <span class="emoji">😢</span>
+              <div class="label">Sad</div>
+              <div class="description">Down or unhappy</div>
+            </div>
+            <div
+              class="emotion-card"
+              data-emotion="worried"
+              onclick="selectEmotion(this)"
+            >
+              <span class="emoji">😟</span>
+              <div class="label">Worried</div>
+              <div class="description">Anxious or nervous</div>
+            </div>
+            <div
+              class="emotion-card"
+              data-emotion="confused"
+              onclick="selectEmotion(this)"
+            >
+              <span class="emoji">😕</span>
+              <div class="label">Confused</div>
+              <div class="description">Uncertain or lost</div>
+            </div>
+            <div
+              class="emotion-card"
+              data-emotion="angry"
+              onclick="selectEmotion(this)"
+            >
+              <span class="emoji">😠</span>
+              <div class="label">Angry</div>
+              <div class="description">Frustrated or upset</div>
+            </div>
+          </div>
+
+          <button
+            class="btn btn-primary btn-block"
+            id="submitEmotionBtn"
+            onclick="submitManualEmotion()"
+            disabled
+          >
+            Record My Mood
+          </button>
+        </div>
+
+        <!-- ===== EMOTION RESULT SCREEN ===== -->
+        <div id="emotionResultSection" class="hidden">
+          <div class="emotion-result">
+            <span class="big-emoji" id="resultEmoji">😊</span>
+            <h2 id="resultTitle">Feeling Happy!</h2>
+            <p id="resultMessage">
+              That's wonderful! Keep spreading those good vibes.
+            </p>
+            <div class="flex gap-md">
+              <button
+                class="btn btn-secondary"
+                onclick="resetEmotionInput()"
+                style="flex: 1"
+              >
+                Check Again
+              </button>
+              <button
+                class="btn btn-primary"
+                onclick="navigateTo('dashboard.html')"
+                style="flex: 1"
+              >
+                Go Home
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== CAMERA DETECTION ===== -->
+        <div id="cameraSection" class="hidden">
+          <div class="camera-container" id="cameraContainer">
+            <video id="cameraVideo" autoplay playsinline></video>
+            <canvas id="cameraCanvas"></canvas>
+
+            <!-- Camera placeholder before starting -->
+            <div class="camera-placeholder" id="cameraPlaceholder">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+                />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+              <p>Tap "Start Camera" to begin emotion detection</p>
+            </div>
+
+            <!-- Emotion overlay -->
+            <div class="camera-overlay hidden" id="cameraOverlay">
+              <div class="camera-emotion-label" id="cameraEmotionLabel">
+                Detecting...
+              </div>
+              <div class="camera-confidence" id="cameraConfidence">
+                Analyzing your expression
+              </div>
+              <div class="camera-confidence-bar">
+                <div
+                  class="fill"
+                  id="cameraConfidenceBar"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Camera Controls -->
+          <div class="camera-controls mt-md mb-lg">
+            <button
+              class="btn btn-primary"
+              id="startCameraBtn"
+              onclick="startCamera()"
+            >
+              📸 Start Camera
+            </button>
+            <button
+              class="btn btn-danger hidden"
+              id="stopCameraBtn"
+              onclick="stopCamera()"
+            >
+              ⏹ Stop
+            </button>
+          </div>
+
+          <!-- Detection Mode Info -->
+          <div
+            class="card-flat"
+            style="
+              background: var(--color-primary-bg);
+              padding: 16px;
+              border-radius: 12px;
+            "
+          >
+            <p
+              style="
+                font-size: 13px;
+                color: var(--color-text-secondary);
+                line-height: 1.5;
+              "
+            >
+              <strong>📊 Smart Detection:</strong> Aurea uses a rolling average
+              of 5 readings to improve accuracy. Keep your face visible and
+              well-lit for best results.
+            </p>
+          </div>
+        </div>
+
+        <!-- ===== EMOTION HISTORY ===== -->
+        <div class="mt-lg">
+          <div class="section-header">
+            <h2>Recent Moods</h2>
+          </div>
+          <div class="emotion-history" id="emotionHistory">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+      <!-- /page-content -->
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+          </svg>
+          <span>Home</span>
+        </a>
+        <a href="games.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M9.5 2A5.5 5.5 0 0 0 4 7.5c0 1.58.67 3 1.74 4.01L4 16l3.5-1.5A5.5 5.5 0 0 0 9.5 15a5.5 5.5 0 0 0 0-11v-2z"
+            />
+            <path
+              d="M14.5 2A5.5 5.5 0 0 1 20 7.5c0 1.58-.67 3-1.74 4.01L20 16l-3.5-1.5A5.5 5.5 0 0 1 14.5 15a5.5 5.5 0 0 1 0-11v-2z"
+            />
+          </svg>
+          <span>Brain</span>
+        </a>
+        <a href="memory.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          <span>Memories</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span>Alerts</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Suggestion Dialog (auto-triggered on negative emotions) -->
+    <div class="dialog-overlay" id="suggestionDialog">
+      <div class="dialog">
+        <div class="dialog-icon" id="suggestionIcon">💛</div>
+        <h3 id="suggestionTitle">We're here for you</h3>
+        <p id="suggestionText">
+          Would you like to look at some happy memories or play a fun brain
+          game?
+        </p>
+        <div class="dialog-actions">
+          <button
+            class="btn btn-secondary"
+            onclick="
+              navigateTo('memory.html');
+              closeSuggestion();
+            "
+          >
+            📸 Memories
+          </button>
+          <button
+            class="btn btn-primary"
+            onclick="
+              navigateTo('games.html');
+              closeSuggestion();
+            "
+          >
+            🧠 Games
+          </button>
+        </div>
+        <button
+          class="btn btn-ghost btn-block mt-md"
+          onclick="closeSuggestion()"
+        >
+          Maybe later
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- face-api.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/automation.js"></script>
+    <script src="../assets/js/emotion.js"></script>
+  </body>
+</html>
