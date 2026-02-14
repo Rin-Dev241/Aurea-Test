@@ -218,9 +218,60 @@ function toggleQuoteType() {
   loadQuote();
 }
 
+// ---- Alert & Sound System ----
+const alertSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); 
+let lastAlertedId = null;
+
+function checkForReminders() {
+  const allReminders = db.getReminders();
+  const now = new Date();
+  const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
+                      now.getMinutes().toString().padStart(2, '0');
+
+  // Find an active, incomplete reminder matching the current minute
+  const dueReminder = allReminders.find(r => 
+    !r.completed && 
+    r.enabled && 
+    r.time === currentTime && 
+    isReminderForToday(r) &&
+    lastAlertedId !== (r.id + currentTime) // Prevent double-triggering in the same minute
+  );
+
+  if (dueReminder) {
+    triggerAlert(dueReminder);
+  }
+}
+
+function triggerAlert(reminder) {
+  lastAlertedId = reminder.id + reminder.time;
+  
+  // 1. Play Sound
+  alertSound.play().catch(e => console.log("Audio playback blocked until user interacts with page."));
+
+  // 2. Browser Notification
+  if (Notification.permission === "granted") {
+    new Notification(`AUREA: ${reminder.title}`, {
+      body: reminder.notes || 'Time for your scheduled reminder!',
+      icon: '/favicon.ico'
+    });
+  }
+
+  // 3. UI Alert
+  alert(`⏰ REMINDER: ${reminder.title}\n${reminder.notes || ''}`);
+}
+
+async function requestNotificationPermission() {
+  if ("Notification" in window) {
+    await Notification.requestPermission();
+  }
+}
+
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
   loadQuote();
   loadReminders();
   requestNotificationPermission();
+  
+  // Run checker every 30 seconds
+  setInterval(checkForReminders, 30000);
 });
