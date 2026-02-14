@@ -143,10 +143,15 @@ function renderAudioList(audioItems) {
   `).join('');
 }
 
-// ---- Upload Modal ----
+// ---- Upload (Inline Form) ----
 function showUploadModal(type) {
+  console.log('Opening inline upload form', type);
   currentMemoryType = type || 'photo';
-  document.getElementById('uploadModal').classList.add('active');
+  const form = document.getElementById('inlineUploadForm');
+  if (form) {
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
   uploadedFileData = null;
   document.getElementById('memoryTitle').value = '';
   document.getElementById('memoryDesc').value = '';
@@ -154,7 +159,12 @@ function showUploadModal(type) {
 }
 
 function closeUploadModal() {
-  document.getElementById('uploadModal').classList.remove('active');
+  const form = document.getElementById('inlineUploadForm');
+  if (form) form.style.display = 'none';
+}
+
+function closeInlineUpload() {
+  closeUploadModal();
 }
 
 function toggleTag(el) {
@@ -204,6 +214,13 @@ function handleFileUpload(event) {
       previewImg.style.display = 'block';
     });
   } else {
+    // Check size first (limit 3MB for localStorage safety)
+    if (file.size > 3 * 1024 * 1024) {
+      alert('File is too large for browser storage (Max 3MB). Please choose a smaller file.');
+      document.getElementById('fileInput').value = '';
+      closeUploadModal();
+      return;
+    }
     reader.readAsDataURL(file);
   }
 }
@@ -246,7 +263,12 @@ function saveMemory() {
     uploadedBy: db.getUser().role || 'patient'
   };
 
-  db.addMemory(memory);
+  const result = db.addMemory(memory);
+
+  if (!result) {
+    showToast('Storage full! File size is too large.', 'danger');
+    return;
+  }
 
   // Complete daily task
   const tasks = db.getDailyTasks();
@@ -343,6 +365,16 @@ function addDemoMemories() {
 
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('Memory module loaded');
   addDemoMemories();
   loadMemories();
+
+  // Attach event listener explicitly
+  const addBtn = document.getElementById('addMemoryBtn');
+  if (addBtn) {
+    addBtn.addEventListener('click', () => {
+      console.log('Add button clicked');
+      showUploadModal();
+    });
+  }
 });

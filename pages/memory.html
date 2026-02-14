@@ -13,12 +13,12 @@
       href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="../manifest.json" />
     <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/memory.css" />
-    <link rel="icon" type="image/png" href="/assets/icons/aurea.png" />
-    <link rel="apple-touch-icon" href="/assets/icons/aurea.png" />
+    <link rel="icon" type="image/png" href="../assets/icons/aurea.png" />
+    <link rel="apple-touch-icon" href="../assets/icons/aurea.png" />
   </head>
   <body>
     <div class="app-container">
@@ -38,7 +38,14 @@
           </button>
           <h1 class="page-header-title">Memories</h1>
           <div class="page-header-right">
-            <button class="btn btn-ghost btn-sm" onclick="showUploadModal()">
+            <button
+              class="btn btn-ghost btn-sm"
+              id="addMemoryBtn"
+              onclick="
+                document.getElementById('inlineUploadForm').style.display =
+                  'block'
+              "
+            >
               + Add
             </button>
           </div>
@@ -66,6 +73,162 @@
             id="tabAudio"
           >
             🎵 Audio
+          </div>
+        </div>
+
+        <!-- ===== INLINE UPLOAD FORM ===== -->
+        <div
+          id="inlineUploadForm"
+          style="
+            display: none;
+            background: var(--color-bg-card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            animation: slideDown 0.3s ease;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 16px;
+            "
+          >
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0">
+              Add Memory
+            </h2>
+            <button
+              onclick="closeInlineUpload()"
+              style="
+                background: none;
+                border: none;
+                font-size: 22px;
+                cursor: pointer;
+                color: var(--color-text-secondary);
+                padding: 4px 8px;
+              "
+            >
+              ✕
+            </button>
+          </div>
+
+          <div class="input-group">
+            <label for="memoryTitle">Title</label>
+            <input
+              type="text"
+              id="memoryTitle"
+              class="input-field"
+              placeholder="e.g., Family Reunion 2024"
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="memoryDesc">Description (optional)</label>
+            <input
+              type="text"
+              id="memoryDesc"
+              class="input-field"
+              placeholder="What makes this memory special?"
+            />
+          </div>
+
+          <div class="input-group">
+            <div class="label-text">Tags</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <span
+                class="chip active"
+                onclick="toggleTag(this)"
+                data-tag="family"
+                >👨‍👩‍👧 Family</span
+              >
+              <span class="chip" onclick="toggleTag(this)" data-tag="friends"
+                >👫 Friends</span
+              >
+              <span
+                class="chip"
+                onclick="toggleTag(this)"
+                data-tag="celebration"
+                >🎉 Celebration</span
+              >
+              <span class="chip" onclick="toggleTag(this)" data-tag="travel"
+                >✈️ Travel</span
+              >
+              <span class="chip" onclick="toggleTag(this)" data-tag="nature"
+                >🌿 Nature</span
+              >
+              <span class="chip" onclick="toggleTag(this)" data-tag="food"
+                >🍽️ Food</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="upload-area"
+            onclick="document.getElementById('fileInput').click()"
+            style="position: relative"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <h3>Tap to Upload</h3>
+            <p>Photos, videos, or audio files</p>
+            <input
+              type="file"
+              id="fileInput"
+              accept="image/*,video/*,audio/*"
+              onchange="handleFileUpload(event)"
+              style="
+                opacity: 0;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+              "
+            />
+          </div>
+
+          <div
+            id="uploadPreview"
+            class="hidden"
+            style="margin-bottom: 16px; text-align: center"
+          >
+            <img
+              id="previewImage"
+              style="max-height: 200px; border-radius: 12px; display: none"
+            />
+            <p
+              id="previewFilename"
+              style="font-size: 13px; color: var(--color-text-secondary)"
+            ></p>
+          </div>
+
+          <div style="display: flex; gap: 12px">
+            <button
+              class="btn btn-secondary"
+              style="flex: 1"
+              onclick="closeInlineUpload()"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn btn-primary"
+              style="flex: 1"
+              onclick="saveMemory()"
+              id="saveMemoryBtn"
+            >
+              Save Memory
+            </button>
           </div>
         </div>
 
@@ -209,120 +372,6 @@
           <span>Profile</span>
         </a>
       </nav>
-    </div>
-
-    <!-- Upload Modal -->
-    <div class="modal-overlay" id="uploadModal">
-      <div class="modal">
-        <div class="modal-handle"></div>
-        <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px">
-          Add Memory
-        </h2>
-
-        <div class="input-group">
-          <label for="memoryTitle">Title</label>
-          <input
-            type="text"
-            id="memoryTitle"
-            class="input-field"
-            placeholder="e.g., Family Reunion 2024"
-          />
-        </div>
-
-        <div class="input-group">
-          <label for="memoryDesc">Description (optional)</label>
-          <input
-            type="text"
-            id="memoryDesc"
-            class="input-field"
-            placeholder="What makes this memory special?"
-          />
-        </div>
-
-        <div class="input-group">
-          <label>Tags</label>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px">
-            <span
-              class="chip active"
-              onclick="toggleTag(this)"
-              data-tag="family"
-              >👨‍👩‍👧 Family</span
-            >
-            <span class="chip" onclick="toggleTag(this)" data-tag="friends"
-              >👫 Friends</span
-            >
-            <span class="chip" onclick="toggleTag(this)" data-tag="celebration"
-              >🎉 Celebration</span
-            >
-            <span class="chip" onclick="toggleTag(this)" data-tag="travel"
-              >✈️ Travel</span
-            >
-            <span class="chip" onclick="toggleTag(this)" data-tag="nature"
-              >🌿 Nature</span
-            >
-            <span class="chip" onclick="toggleTag(this)" data-tag="food"
-              >🍽️ Food</span
-            >
-          </div>
-        </div>
-
-        <div
-          class="upload-area"
-          onclick="document.getElementById('fileInput').click()"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17 8 12 3 7 8" />
-            <line x1="12" y1="3" x2="12" y2="15" />
-          </svg>
-          <h3>Tap to Upload</h3>
-          <p>Photos, videos, or audio files</p>
-          <input
-            type="file"
-            id="fileInput"
-            accept="image/*,video/*,audio/*"
-            onchange="handleFileUpload(event)"
-          />
-        </div>
-
-        <div
-          id="uploadPreview"
-          class="hidden"
-          style="margin-bottom: 16px; text-align: center"
-        >
-          <img
-            id="previewImage"
-            style="max-height: 200px; border-radius: 12px; display: none"
-          />
-          <p
-            id="previewFilename"
-            style="font-size: 13px; color: var(--color-text-secondary)"
-          ></p>
-        </div>
-
-        <div style="display: flex; gap: 12px">
-          <button
-            class="btn btn-secondary"
-            style="flex: 1"
-            onclick="closeUploadModal()"
-          >
-            Cancel
-          </button>
-          <button
-            class="btn btn-primary"
-            style="flex: 1"
-            onclick="saveMemory()"
-            id="saveMemoryBtn"
-          >
-            Save Memory
-          </button>
-        </div>
-      </div>
     </div>
 
     <!-- Media Viewer -->

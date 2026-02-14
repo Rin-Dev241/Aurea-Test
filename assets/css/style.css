@@ -342,7 +342,8 @@ ul, ol {
   margin-bottom: var(--space-md);
 }
 
-.input-group label {
+.input-group label,
+.input-group .label-text {
   display: block;
   font-size: var(--font-size-sm);
   font-weight: 600;

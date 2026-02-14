@@ -45,7 +45,8 @@ class AureaDB {
     try {
       localStorage.setItem(this.prefix + key, JSON.stringify(value));
       return true;
-    } catch {
+    } catch (e) {
+      console.error('Storage failed:', e);
       return false;
     }
   }
@@ -98,13 +99,18 @@ class AureaDB {
 
   addMemory(memory) {
     const memories = this.getMemories();
-    memories.unshift({
+    const newMemory = {
       ...memory,
       id: Date.now().toString(),
       createdAt: new Date().toISOString()
-    });
-    this._set('memories', memories);
-    return memories[0];
+    };
+    memories.unshift(newMemory);
+    
+    if (this._set('memories', memories)) {
+      return newMemory;
+    } else {
+      return null;
+    }
   }
 
   deleteMemory(id) {
