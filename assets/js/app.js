@@ -504,8 +504,8 @@ function checkReminders() {
       });
     }
   });
-  });
 }
+
 
 // ---- Utility Functions ----
 function getDayOfYear() {

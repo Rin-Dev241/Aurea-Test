@@ -2,7 +2,7 @@
    AUREA — Service Worker (Offline Support)
    ============================================ */
 
-const CACHE_NAME = 'aurea-v1';
+const CACHE_NAME = 'aurea-v2';
 const ASSETS = [
   '/',
   '/index.html',
